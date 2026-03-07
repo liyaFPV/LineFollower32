@@ -8,9 +8,11 @@ float Kp = 0.0;
 float Ki = 0.0;
 float Kd = 0.0;
 
+/* ===== SENSOR VARIABLES ===== */
 int sensitivity = 0;
 int sensorAverage = 0;
 
+/* ===== ROBOT STATE ===== */
 bool robotStarted = false;
 
 void connectWiFi() {
@@ -40,20 +42,51 @@ void connectWiFi() {
     }
 }
 
+void pinSetup() {
+    pinMode(s0, INPUT);
+    pinMode(s1, INPUT);
+    pinMode(s2, INPUT);
+    pinMode(s3, INPUT);
+    pinMode(s4, INPUT);
+    pinMode(s5, INPUT);
+    pinMode(s6, INPUT);
+    pinMode(s7, INPUT);
+
+    pinMode(motorL, OUTPUT);
+    pinMode(motorR, OUTPUT);
+}
+
+void selfTest() {
+    analogWrite(motorL, 128);
+    analogWrite(motorR, 128);
+    delay(500);
+
+    int x = analogRead(s0) + analogRead(s1) + analogRead(s2) + analogRead(s3) +
+            analogRead(s4) + analogRead(s5) + analogRead(s6) + analogRead(s7);
+    x = x / 8;
+    sensorAverage = x;
+
+    Serial.println(Kp);
+    Serial.println(Ki);
+    Serial.println(Kd);
+    Serial.println(sensitivity);
+
+    if (x == 0) {
+        Serial.println("Self test Failed");
+    } else {
+        Serial.println("Self test Passed");
+        return;
+    }
+}
+
 void setup() {
     Serial.begin(115200);
-
     connectWiFi();
-
     beginWebServer();
+    pinSetup();
+    selfTest();
 }
 
 void loop() {
-  handleWebServer();
-  Serial.println(Kp);
-  Serial.println(Ki);
-  Serial.println(Kd);
-  Serial.println(sensitivity);
-  sensorAverage=100;
-  Serial.println();
+    handleWebServer();
 }

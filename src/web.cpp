@@ -15,6 +15,7 @@ void saveSettings() {
 
     prefs.putInt("sens", sensitivity);
     prefs.putInt("avg", sensorAverage);
+    prefs.putInt("offset", sensitivityOffset);
 
     prefs.end();
 }
@@ -28,6 +29,7 @@ void loadSettings() {
 
     sensitivity = prefs.getInt("sens", 0);
     sensorAverage = prefs.getInt("avg", 0);
+    sensitivityOffset = prefs.getInt("offset", 30);
 
     prefs.end();
 }
@@ -86,9 +88,11 @@ String htmlPage() {
         <label>Kd</label><input id="kd" type="number" step="0.01"><br>
         <label>Sensitivity</label><input id="sens" type="number"><br>
         <label>Sensor Avg</label><input id="avg" type="number" readonly><br>
+        <label>Sensitivity Offset</label><input id="offset" type="number"><br>
     </div>
 
     <button onclick="saveData()">Save Parameters</button><br>
+    <button onclick="setSensitivity()">Set Sensitivity</button><br>
     <button onclick="fetch('/start')">START</button>
     <button onclick="fetch('/stop')">STOP</button>
 
@@ -102,6 +106,7 @@ String htmlPage() {
                     document.getElementById("kd").value = data.kd;
                     document.getElementById("sens").value = data.sens;
                     document.getElementById("avg").value = data.avg;
+                    document.getElementById("offset").value = data.offset;
                 });
         }
 
@@ -112,11 +117,21 @@ String htmlPage() {
             form.append("ki", document.getElementById("ki").value);
             form.append("kd", document.getElementById("kd").value);
             form.append("sens", document.getElementById("sens").value);
+            form.append("offset", document.getElementById("offset").value);
 
             fetch("/set", { method: "POST", body: form });
         }
 
-        window.onload = loadData;
+        function setSensitivity() {
+            let form = new FormData();
+            form.append("setSensAuto", "1");
+            fetch("/set", { method: "POST", body: form });
+        }
+
+        window.onload = function() {
+            loadData();
+            setInterval(loadData, 100);
+        };
     </script>
 </body>
 </html>
@@ -145,6 +160,11 @@ void handleSet() {
     if (server.hasArg("kd")) Kd = server.arg("kd").toFloat();
 
     if (server.hasArg("sens")) sensitivity = server.arg("sens").toInt();
+    if (server.hasArg("offset")) sensitivityOffset = server.arg("offset").toInt();
+
+    if (server.hasArg("setSensAuto")) {
+        sensitivity = sensorAverage - sensitivityOffset;
+    }
 
     saveSettings();
 
@@ -157,7 +177,8 @@ void handleGet() {
     json += "\"ki\":" + String(Ki, 2) + ",";
     json += "\"kd\":" + String(Kd, 2) + ",";
     json += "\"sens\":" + String(sensitivity) + ",";
-    json += "\"avg\":" + String(sensorAverage);
+    json += "\"avg\":" + String(sensorAverage) + ",";
+    json += "\"offset\":" + String(sensitivityOffset);
     json += "}";
 
     server.send(200, "application/json", json);

@@ -2,8 +2,10 @@
 #include "config.h"
 #include <WiFi.h>
 #include "web.h"
+#include "core1.h"
+#include <freertos/task.h>
 
-/* ===== PID VARIABLES ===== */
+/* ===== PID VARIABLES (Core 0) ===== */
 float Kp = 0.0;
 float Ki = 0.0;
 float Kd = 0.0;
@@ -11,6 +13,7 @@ float Kd = 0.0;
 /* ===== SENSOR VARIABLES ===== */
 int sensitivity = 0;
 int sensorAverage = 0;
+int sensitivityOffset = 30;
 
 /* ===== ROBOT STATE ===== */
 bool robotStarted = false;
@@ -61,9 +64,10 @@ void selfTest() {
     analogWrite(motorL, 128);
     analogWrite(motorR, 128);
     delay(500);
+    analogWrite(motorL, 0);
+    analogWrite(motorR, 0);
 
-    int x = analogRead(s0) + analogRead(s1) + analogRead(s2) + analogRead(s3) +
-            analogRead(s4) + analogRead(s5) + analogRead(s6) + analogRead(s7);
+    int x = analogRead(s0) + analogRead(s1) + analogRead(s2) + analogRead(s3) + analogRead(s4) + analogRead(s5) + analogRead(s6) + analogRead(s7);
     x = x / 8;
     sensorAverage = x;
 
@@ -82,16 +86,23 @@ void selfTest() {
 
 void setup() {
     Serial.begin(115200);
+    delay(500);
+    
+    Serial.println("\n\n=== LineFollower32 Starting ===");
+    Serial.print("Setup running on core: ");
+    Serial.println(xPortGetCoreID());
+    
     connectWiFi();
     beginWebServer();
     pinSetup();
-    selfTest();
+    //selfTest();
+    analogWrite(motorL, 0);
+    analogWrite(motorR, 0);
+    initCore1Task();
 }
 
 void loop() {
-    handleWebServer();
-    if(digitalRead(butnStart) == LOW) {
-        robotStarted = !robotStarted;
-        delay(50);
+    
+    if (robotStarted) {
     }
 }

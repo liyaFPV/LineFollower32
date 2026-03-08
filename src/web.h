@@ -11,6 +11,7 @@ extern float Kd;
 
 extern int sensitivity;
 extern int sensorAverage;
+extern int sensitivityOffset;
 
 extern bool robotStarted;
 

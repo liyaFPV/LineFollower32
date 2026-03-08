@@ -51,6 +51,7 @@ void pinSetup() {
     pinMode(s5, INPUT);
     pinMode(s6, INPUT);
     pinMode(s7, INPUT);
+    pinMode(butnStart, INPUT_PULLUP);
 
     pinMode(motorL, OUTPUT);
     pinMode(motorR, OUTPUT);
@@ -89,4 +90,8 @@ void setup() {
 
 void loop() {
     handleWebServer();
+    if(digitalRead(butnStart) == LOW) {
+        robotStarted = !robotStarted;
+        delay(50);
+    }
 }

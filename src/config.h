@@ -22,3 +22,6 @@
 /* ===== MOTOR PINS ===== */
 #define motorL 12
 #define motorR 13
+
+/*=====BUTTON PINS=====*/
+#define butnStart 0

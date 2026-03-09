@@ -25,3 +25,9 @@
 
 /*=====BUTTON PINS=====*/
 #define butnStart 0
+
+/*=====PID PARAMETERS=====*/
+#define BaseSpeed 100
+#define MaxSpeed 200
+#define updateTime 1
+const int SE[] = {-3,-2,-1,0,0,1,2,3};

@@ -4,19 +4,29 @@
 #include "web.h"
 #include "core1.h"
 #include <freertos/task.h>
+#include <uPID.h>
 
-/* ===== PID VARIABLES (Core 0) ===== */
+uPID pid(D_INPUT | I_SATURATE);
+
 float Kp = 0.0;
 float Ki = 0.0;
 float Kd = 0.0;
-
-/* ===== SENSOR VARIABLES ===== */
 int sensitivity = 0;
 int sensorAverage = 0;
 int sensitivityOffset = 30;
-
-/* ===== ROBOT STATE ===== */
 bool robotStarted = false;
+
+int LMS,RMS,Speed=0;
+
+int getE(){
+    int sensorV[8]={analogRead(s0),analogRead(s1),analogRead(s2),analogRead(s3),analogRead(s4),analogRead(s5),analogRead(s6),analogRead(s7)};
+    for(int i=0;i<8;i++){
+        if(sensorV[i]>sensorAverage+sensitivityOffset){
+            return SE[i];
+        }
+    }
+    return -1;
+}
 
 void connectWiFi() {
     WiFi.mode(WIFI_STA);
@@ -87,6 +97,9 @@ void selfTest() {
 void setup() {
     Serial.begin(115200);
     delay(500);
+    pid.setDt(updateTime);
+    pid.outMax = 255;
+    pid.outMin = -255;
     
     Serial.println("\n\n=== LineFollower32 Starting ===");
     Serial.print("Setup running on core: ");
@@ -102,7 +115,20 @@ void setup() {
 }
 
 void loop() {
-    
+    pid.setKp(10);
+    pid.setKi(20);
+    pid.setKd(5);
     if (robotStarted) {
+        if (getE() != -1) {
+            Speed = pid.compute(getE());
+            LMS=constrain(BaseSpeed - Speed,0,MaxSpeed);
+            RMS=constrain(BaseSpeed + Speed,0,MaxSpeed);
+            delay(updateTime);
+        } else {
+            LMS=BaseSpeed;
+            RMS=BaseSpeed;
+        }
+        analogWrite(motorL, LMS);
+        analogWrite(motorR, RMS);
     }
 }

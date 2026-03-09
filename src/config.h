@@ -30,4 +30,14 @@
 #define BaseSpeed 100
 #define MaxSpeed 200
 #define updateTime 1
-const int SE[] = {-3,-2,-1,0,0,1,2,3};
+const int SE[] = {0,1,2,3,4,5,6,7};
+const int speed[][2] = {
+    {0,255},//lms rms
+    {150,255},
+    {150,255},
+    {255,255},
+    {255,255},
+    {255,150},
+    {255,100},
+    {255,0}
+};

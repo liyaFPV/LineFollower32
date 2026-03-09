@@ -122,16 +122,11 @@ void loop() {
         if(digitalRead(butnStart) == LOW) {
             robotStarted = false;
         }
-        if (getE() != -1) {
-            Speed = pid.compute(getE());
-            LMS=constrain(BaseSpeed - Speed,0,MaxSpeed);
-            RMS=constrain(BaseSpeed + Speed,0,MaxSpeed);
-            delay(updateTime);
-        } else {
-            LMS=BaseSpeed;
-            RMS=BaseSpeed;
-        }
+        int E = getE();
+        LMS = speed[E][0];
+        RMS = speed[E][1];
         analogWrite(motorL, LMS);
         analogWrite(motorR, RMS);
+        delay(updateTime);
     }
 }

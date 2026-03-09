@@ -101,9 +101,17 @@ String htmlPage() {
             fetch("/get")
                 .then(r => r.json())
                 .then(data => {
-                    document.getElementById("kp").value = data.kp;
-                    document.getElementById("ki").value = data.ki;
-                    document.getElementById("kd").value = data.kd;
+
+                    // PID обновляем только если поле пустое
+                    if(document.getElementById("kp").value === "")
+                        document.getElementById("kp").value = data.kp;
+
+                    if(document.getElementById("ki").value === "")
+                        document.getElementById("ki").value = data.ki;
+
+                    if(document.getElementById("kd").value === "")
+                        document.getElementById("kd").value = data.kd;
+
                     document.getElementById("sens").value = data.sens;
                     document.getElementById("avg").value = data.avg;
                     document.getElementById("offset").value = data.offset;
@@ -130,7 +138,7 @@ String htmlPage() {
 
         window.onload = function() {
             loadData();
-            setInterval(loadData, 100);
+            setInterval(loadData, 5000);
         };
     </script>
 </body>

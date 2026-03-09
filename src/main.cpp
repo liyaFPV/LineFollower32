@@ -95,7 +95,7 @@ void selfTest() {
 }
 
 void setup() {
-    Serial.begin(115200);
+    Serial.begin(9600);
     delay(500);
     pid.setDt(updateTime);
     pid.outMax = 255;
@@ -119,6 +119,9 @@ void loop() {
     pid.setKi(20);
     pid.setKd(5);
     if (robotStarted) {
+        if(digitalRead(butnStart) == LOW) {
+            robotStarted = false;
+        }
         if (getE() != -1) {
             Speed = pid.compute(getE());
             LMS=constrain(BaseSpeed - Speed,0,MaxSpeed);

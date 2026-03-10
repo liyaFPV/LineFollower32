@@ -5,8 +5,8 @@ int LMS,RMS,Speed=0;
 
 void ATcontrol(){
     if (Serial.available()) {
-        int spd = Serial.parseInt();   // читаем число из Serial
-        spd = constrain(spd, 0, 255);  // ограничиваем диапазон
+        int spd = Serial.parseInt();
+        spd = constrain(spd, 0, 255);
 
         LMS = spd;
         RMS = spd;

@@ -47,17 +47,17 @@ void setup() {
 
 void race(){
     if(analogRead(s0)>=sensitivity){
-        Speed=25*m;
+        Speed=50;
         LMS=constrain(BaseSpeed+Speed,0,255);
         RMS=constrain(BaseSpeed-Speed,0,255);
     }
     if(analogRead(s1)>=sensitivity){
-        Speed=20*m;
+        Speed=40;
         LMS=constrain(BaseSpeed+Speed,0,255);
         RMS=constrain(BaseSpeed-Speed,0,255);
     }
     if(analogRead(s2)>=sensitivity){
-        Speed=15*m;
+        Speed=30;
         LMS=constrain(BaseSpeed+Speed,0,255);
         RMS=constrain(BaseSpeed-Speed,0,255);
     }
@@ -72,17 +72,17 @@ void race(){
         RMS=constrain(BaseSpeed+Speed,0,255);
     }
     if(analogRead(s5)>=sensitivity){
-        Speed=10*m;
+        Speed=30;
         LMS=constrain(BaseSpeed-Speed,0,255);
         RMS=constrain(BaseSpeed+Speed,0,255);
     }
     if(analogRead(s6)>=sensitivity){
-        Speed=20*m;
+        Speed=40;
         LMS=constrain(BaseSpeed-Speed,0,255);
         RMS=constrain(BaseSpeed+Speed,0,255);
     }
     if(analogRead(s7)>=sensitivity){
-        Speed=25*m;
+        Speed=50;
         LMS=constrain(BaseSpeed-Speed,0,255);
         RMS=constrain(BaseSpeed+Speed,0,255);
     }
@@ -98,12 +98,15 @@ void loop() {
     }
     if (robotStarted) {
         race();
+        analogWrite(motorL, LMS+add);
+        analogWrite(motorR, RMS+add);
     }else{
         ATcontrol();
+        analogWrite(motorL, LMS);
+        analogWrite(motorR, RMS);
     }
     int x = analogRead(s0);
     Serial.println("E:"+String(getE())+","+"LMS:"+String(LMS)+","+"RMS:"+String(RMS)+","+"x:"+String(x)+","+"start:"+String(robotStarted));
-    analogWrite(motorL, LMS);
-    analogWrite(motorR, RMS);
+
     //delay(10);
 }

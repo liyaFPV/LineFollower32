@@ -19,7 +19,7 @@
 #define butnStart 15
 
 /*=====PID PARAMETERS=====*/
-#define BaseSpeed 80
+#define BaseSpeed 100
 #define sensitivity 4000
-#define m 2
+#define add 0
 const int SE[] = {-3,-2,-1,0,0,1,2,3};

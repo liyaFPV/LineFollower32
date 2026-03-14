@@ -27,7 +27,7 @@
 #define butnStart 15
 
 /*=====PID PARAMETERS=====*/
-#define BaseSpeed 40
-#define MaxSpeed 100
-#define updateTime 1
+#define BaseSpeed 80
+#define sensitivity 4000
+#define m 2
 const int SE[] = {-3,-2,-1,0,0,1,2,3};

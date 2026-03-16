@@ -1,19 +1,9 @@
-#pragma once
+#ifndef WEB_H
+#define WEB_H
 
-#include <WebServer.h>
-#include <Preferences.h>
+extern int Pk, Ik, Dk, Sk, BaseSpeed;
+extern bool swit;
 
-/* External robot variables */
-
-extern float Kp;
-extern float Ki;
-extern float Kd;
-
-extern int sensitivity;
-extern int sensorAverage;
-extern int sensitivityOffset;
-
-extern bool robotStarted;
-
-void beginWebServer();
-void handleWebServer();
+void setupWEB();
+void webTick();
+#endif

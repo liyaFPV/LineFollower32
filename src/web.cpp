@@ -7,7 +7,8 @@
 
 SettingsGyver sett("Line Follower 32");
 
-int Pk, Ik, Dk, Sk, BaseSpeed;
+float Pk, Ik, Dk;
+int BaseSpeed,Sk;
 bool swit;
 String Skt="Sk"+String(analogRead(S0));
 
@@ -30,12 +31,16 @@ void load(){
     BaseSpeed = EEPROM.readInt(baseSpeeda);
 }
 
+void update(sets::Updater& upd) {
+    upd.update("Sk"_h, analogRead(S0));
+}
+
 void build(sets::Builder& b) {
     b.Slider("Pk", 0, 150, 1, "", &Pk);
     b.Slider("Ik", 0, 150, 1, "", &Ik);
     b.Slider("Dk", 0, 150, 1, "", &Dk);
-    b.Slider("Sk", 0, 4050, 1, "", &Sk);
-    b.Label();
+    b.Slider("Sk", 0, 4095, 1, "", &Sk);
+    b.Label("Sk"_h, "agv");
     b.Slider("Base speed", 0, 255, 1, "", &BaseSpeed);
     b.Switch("start", &swit);
     if(b.Button("save")) {
@@ -44,6 +49,7 @@ void build(sets::Builder& b) {
         Serial.println("Dk: " + String(Dk));
         Serial.println("Sk: " + String(Skt));
         Serial.println("BaseSpeed: " + String(BaseSpeed));
+        save();
     }
 }
 void setupWEB() {
@@ -62,6 +68,7 @@ void setupWEB() {
 
     sett.begin();
     sett.onBuild(build);
+    sett.onUpdate(update);
 }
 
 void webTick() {

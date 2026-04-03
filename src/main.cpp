@@ -58,5 +58,8 @@ void loop() {
         Serial.println("Err: " + String(Err) + " Result: " + String(result) + " SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
         analogWrite(motorL, speedL);
         analogWrite(motorR, speedR);
+    }else{
+        analogWrite(motorL, 0);
+        analogWrite(motorR, 0);
     }
 }

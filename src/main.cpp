@@ -7,14 +7,16 @@ uPID pid(D_INPUT | I_SATURATE);
 int Err=0;
 
 void getErr(){
-    if(analogRead(S0)>=Sk){Err=-3;}
-    if(analogRead(S1)>=Sk){Err=-2;}
-    if(analogRead(S2)>=Sk){Err=-1;}
-    if(analogRead(S3)>=Sk){Err=0;}
-    if(analogRead(S4)>=Sk){Err=0;}
-    if(analogRead(S5)>=Sk){Err=1;}
-    if(analogRead(S6)>=Sk){Err=2;}
-    if(analogRead(S7)>=Sk){Err=3;}
+    if(analogRead(S0)>=Sk){Err=-3;}else
+    if(analogRead(S1)>=Sk){Err=-2;}else
+    if(analogRead(S2)>=Sk){Err=-1;}else
+    if(analogRead(S3)>=Sk){Err=0;}else
+    if(analogRead(S4)>=Sk){Err=0;}else
+    if(analogRead(S5)>=Sk){Err=1;}else
+    if(analogRead(S6)>=Sk){Err=2;}else
+    if(analogRead(S7)>=Sk){Err=3;}else
+    {Err=-4;}
+
 }
 
 void setup() {
@@ -53,13 +55,19 @@ void loop() {
     }
     if (swit){
         getErr();
-        float result = pid.compute(Err);
-        
-        int speedL = constrain(BaseSpeed + result, 0, 255);
-        int speedR = constrain(BaseSpeed - result, 0, 255);
-        Serial.println("Err: " + String(Err) + " Result: " + String(result) + " SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
-        analogWrite(motorL, speedL);
-        analogWrite(motorR, speedR);
+        if(Err == -4){
+            analogWrite(motorL, BaseSpeed);
+            analogWrite(motorR, 0);
+            return;
+        }else{
+            float result = pid.compute(Err);
+            int speedL = constrain(BaseSpeed + result, 0, 255);
+            int speedR = constrain(BaseSpeed - result, 0, 255);
+            Serial.println("Err: " + String(Err) + " Result: " + String(result) + " SpeedL: " + String(speedL) + " SpeedR: " + String(speedR));
+            analogWrite(motorL, speedL);
+            analogWrite(motorR, speedR);
+        }
+
     }else{
         analogWrite(motorL, 0);
         analogWrite(motorR, 0);

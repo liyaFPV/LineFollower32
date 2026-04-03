@@ -36,6 +36,8 @@ void setup() {
 
     pinMode(motorL, OUTPUT);
     pinMode(motorR, OUTPUT);
+    analogWrite(motorL, 0);
+    analogWrite(motorR, 0);
     
     setupWEB();
 }

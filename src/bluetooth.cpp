@@ -6,7 +6,10 @@
 
 extern int BaseSpeed;
 extern int TurboSpeed;
+extern int trim;
+extern int timeslep;
 extern bool robotRun;
+
 
 BluetoothSerial SerialBT;
 static bool btIntroShown = false;
@@ -18,21 +21,23 @@ SerialBT.println("===== LINE FOLLOWER =====");
 SerialBT.println("AT COMMANDS:");
 
 SerialBT.println("AT -> ping");
-SerialBT.println("AT+START");
-SerialBT.println("AT+STOP");
+SerialBT.println("START");
+SerialBT.println("STOP");
 
-SerialBT.println("AT+P=value");
-SerialBT.println("AT+I=value");
-SerialBT.println("AT+D=value");
+SerialBT.println("P=value");
+SerialBT.println("I=value");
+SerialBT.println("D=value");
 
-SerialBT.println("AT+B=value (base speed)");
-SerialBT.println("AT+T=value (turbo speed)");
+SerialBT.println("B=value (base speed)");
+SerialBT.println("T=value (turbo speed)");
+SerialBT.println("TR=value (trim rate)");
+SerialBT.println("TS=value (time sleep)");
 
-SerialBT.println("AT+CAL");
-SerialBT.println("AT+SENS -> start manual sensitivity measurement (500 ms average output)");
-SerialBT.println("AT+SENS=value -> set sensitivity threshold and save");
-SerialBT.println("AT+CONF");
-SerialBT.println("AT+SAVE");
+SerialBT.println("CAL");
+SerialBT.println("SENS -> start manual sensitivity measurement (200 ms average output)");
+SerialBT.println("SENS=value -> set sensitivity threshold and save");
+SerialBT.println("CONF");
+SerialBT.println("SAVE");
 SerialBT.println("=========================");
 }
 
@@ -50,6 +55,12 @@ SerialBT.println(BaseSpeed);
 SerialBT.print("TurboSpeed=");
 SerialBT.println(TurboSpeed);
 
+SerialBT.print("trim=");
+SerialBT.println(trim);
+
+SerialBT.print("timeslep=");
+SerialBT.println(timeslep);
+
 SerialBT.print("RUN=");
 SerialBT.println(robotRun);
 
@@ -61,63 +72,70 @@ cmd.trim();
 
 if(cmd=="AT") SerialBT.println("OK");
 
-else if(cmd=="AT+START"){
+else if(cmd=="START"){
 robotRun=true;
 SerialBT.println("RUN");
 }
 
-else if(cmd=="AT+STOP"){
+else if(cmd=="STOP"){
 robotRun=false;
 stopMotors();
 SerialBT.println("STOP");
 }
 
-else if(cmd.startsWith("AT+P=")){
-P=cmd.substring(5).toFloat();
+else if(cmd.startsWith("P=")){
+P=cmd.substring(2).toFloat();
 }
 
-else if(cmd.startsWith("AT+I=")){
-I=cmd.substring(5).toFloat();
+else if(cmd.startsWith("I=")){
+I=cmd.substring(2).toFloat();
 }
 
-else if(cmd.startsWith("AT+D=")){
-D=cmd.substring(5).toFloat();
+else if(cmd.startsWith("D=")){
+D=cmd.substring(2).toFloat();
 }
 
-else if(cmd.startsWith("AT+B=")){
-BaseSpeed=cmd.substring(5).toInt();
+else if(cmd.startsWith("B=")){
+BaseSpeed=cmd.substring(2).toInt();
 }
 
-else if(cmd.startsWith("AT+T=")){
-TurboSpeed=cmd.substring(5).toInt();
+else if(cmd.startsWith("T=")){
+TurboSpeed=cmd.substring(2).toInt();
 }
 
-else if(cmd=="AT+CAL"){
+else if(cmd.startsWith("TR=")){
+trim=cmd.substring(3).toInt();
+}
+else if(cmd.startsWith("TS=")){
+timeslep=cmd.substring(3).toInt();
+}
+
+else if(cmd=="CAL"){
 calibrateSensors();
 }
 
-else if(cmd=="AT+SENS"){
+else if(cmd=="SENS"){
 startManualSensitivity();
 }
 
-else if(cmd.startsWith("AT+SENS=")){
-int value = cmd.substring(8).toInt();
+else if(cmd.startsWith("SENS=")){
+int value = cmd.substring(5).toInt();
 setSensorThreshold(value);
 saveSettings();
 SerialBT.println("SAVED");
 }
 
-else if(cmd=="AT+CONF"){
+else if(cmd=="CONF"){
 printConfig();
 printSensorThreshold();
 }
 
-else if(cmd=="AT+SAVE"){
+else if(cmd=="SAVE"){
 saveSettings();
 SerialBT.println("SAVED");
 }
 
-else if(cmd=="AT+HELP"){
+else if(cmd=="HELP"){
 printHelp();
 }
 

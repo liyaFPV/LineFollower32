@@ -2,6 +2,20 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+//config
+/*
+v1 stable
+P=10.00
+I=0.00
+D=10.00
+BaseSpeed=130
+TurboSpeed=130
+trim=0
+timeslep=150
+SensorThreshold=4000
+*/
+
+
 /* ===== EEPROM ===== */
 #define EEPROM_SIZE 512
 
@@ -18,8 +32,8 @@
 
 /* ===== MOTOR PINS ===== */
 
-#define motorL 12
-#define motorR 13
+#define motorL 13
+#define motorR 12
 
 /* ===== BUTTON ===== */
 

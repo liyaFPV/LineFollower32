@@ -28,11 +28,7 @@ int readLine(){
 
         int v = analogRead(sensorPins[i]);
 
-        int norm = constrain(
-        (v - sensorMin[i]) * 1000 /
-        (sensorMax[i] - sensorMin[i]),0,1000);
-
-        if(norm > sensorThreshold){
+        if(v > sensorThreshold){
             sum += weights[i];
             count += 1000;
         }
@@ -53,7 +49,7 @@ void startManualSensitivity(){
     manualSum = 0;
     SerialBT.println("SENS_MANUAL START");
     SerialBT.println("Averages will be sent every 500 ms for 10 sec");
-    SerialBT.println("Send AT+SENS=value at any time to save threshold");
+    SerialBT.println("Send SENS=value at any time to save threshold");
 }
 
 void manualSensitivityTick(){
@@ -80,12 +76,12 @@ void manualSensitivityTick(){
     if(now - manualSensStart >= 10000){
         manualSensActive = false;
         SerialBT.println("SENS_MANUAL DONE");
-        SerialBT.println("Send AT+SENS=value to save threshold");
+        SerialBT.println("Send SENS=value to save threshold");
     }
 }
 
 void setSensorThreshold(int threshold){
-    sensorThreshold = constrain(threshold, 0, 1000);
+    sensorThreshold = constrain(threshold, 0, 4095);
     SerialBT.print("SENS=");
     SerialBT.print(sensorThreshold);
     SerialBT.println(" OK");

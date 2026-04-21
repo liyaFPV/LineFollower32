@@ -1,6 +1,6 @@
 #include "pid.h"
 
-float P = 1.0;
+float P = 10.0;
 float I = 0.0;
 float D = 10.0;
 
@@ -18,7 +18,7 @@ float computePID(int err){
 
     prevErr = err;
 
-    return constrain(out,-200,200);
+    return constrain(out,-255,255);
 }
 
 void resetPID(){

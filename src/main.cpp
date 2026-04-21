@@ -6,6 +6,7 @@
 
 int BaseSpeed = 140;
 int TurboSpeed = 140;
+int ReturnSpeed = 200;
 int trim = 0;
 int timeslep = 10;
 bool robotRun = false;
@@ -24,9 +25,11 @@ void saveSettings() {
     EEPROM.put(addr, BaseSpeed); addr += sizeof(int);
     EEPROM.put(addr, TurboSpeed); addr += sizeof(int);
 
+    // NEW
+    EEPROM.put(addr, ReturnSpeed); addr += sizeof(int);
+
     EEPROM.put(addr, sensorThreshold); addr += sizeof(int);
 
-    // NEW SETTINGS
     EEPROM.put(addr, trim); addr += sizeof(int);
     EEPROM.put(addr, timeslep); addr += sizeof(int);
 
@@ -47,15 +50,17 @@ void loadSettings() {
 
     EEPROM.get(addr, magic);
     if(magic != EEPROM_MAGIC) {
-        // defaults
         for(int i = 0; i < 8; i++) {
             sensorMin[i] = 0;
             sensorMax[i] = 4095;
         }
 
         sensorThreshold = 200;
-        trim = 0;          // NEW DEFAULT
-        timeslep = 10;     // NEW DEFAULT
+        trim = 0;
+        timeslep = 10;
+
+        ReturnSpeed = 200;
+
         return;
     }
 
@@ -68,9 +73,11 @@ void loadSettings() {
     EEPROM.get(addr, BaseSpeed); addr += sizeof(int);
     EEPROM.get(addr, TurboSpeed); addr += sizeof(int);
 
+    // NEW
+    EEPROM.get(addr, ReturnSpeed); addr += sizeof(int);
+
     EEPROM.get(addr, sensorThreshold); addr += sizeof(int);
 
-    // NEW SETTINGS
     EEPROM.get(addr, trim); addr += sizeof(int);
     EEPROM.get(addr, timeslep); addr += sizeof(int);
 
@@ -96,6 +103,9 @@ void setup(){
 }
 
 void processLine(int err) {
+    if(err !=4000){
+        lastErr=err;
+    }
     if(err == 5000){
         setMotor(BaseSpeed,BaseSpeed);
         delay(timeslep);
@@ -103,9 +113,9 @@ void processLine(int err) {
     }
     if(err==4000){
         if(lastErr>0)
-            setMotor(BaseSpeed,0);
+            setMotor(ReturnSpeed,0);
         else
-            setMotor(0,BaseSpeed);
+            setMotor(0,ReturnSpeed);
         return;
     }
 
@@ -117,24 +127,19 @@ void processLine(int err) {
     int R = currentSpeed - correction;
 
     setMotor(L,R);
-
-    lastErr = err;
 }
 
 void loop(){
-
     btTick();
-
     if(digitalRead(BTN_START)==LOW){
-
         robotRun=!robotRun;
-
         delay(300);
-
     }
-
-    int err = readLine();
-
-    processLine(err);
-
+    if(robotRun){
+        int err = readLine();
+        processLine(err);
+    }
+    else{
+        setMotor(0,0);
+    }
 }

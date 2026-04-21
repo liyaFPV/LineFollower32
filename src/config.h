@@ -2,8 +2,8 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+//config
 /*
-config:
 v1 stable
 P=10.00
 I=0.00

@@ -2,15 +2,23 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+<<<<<<< HEAD
 /*
 config:
+=======
+//config
+/*
+>>>>>>> 50d4e9bedfa809f93c16cf1e3747c99fbb3a9d4a
 v1 stable
 P=10.00
 I=0.00
 D=10.00
 BaseSpeed=130
 TurboSpeed=130
+<<<<<<< HEAD
 ReturnSpeed=200
+=======
+>>>>>>> 50d4e9bedfa809f93c16cf1e3747c99fbb3a9d4a
 trim=0
 timeslep=150
 SensorThreshold=4000

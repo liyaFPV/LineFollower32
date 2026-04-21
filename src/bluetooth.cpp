@@ -6,7 +6,10 @@
 
 extern int BaseSpeed;
 extern int TurboSpeed;
+<<<<<<< HEAD
 extern int ReturnSpeed;
+=======
+>>>>>>> 50d4e9bedfa809f93c16cf1e3747c99fbb3a9d4a
 extern int trim;
 extern int timeslep;
 extern bool robotRun;
@@ -31,7 +34,10 @@ SerialBT.println("D=value");
 
 SerialBT.println("B=value (base speed)");
 SerialBT.println("T=value (turbo speed)");
+<<<<<<< HEAD
 SerialBT.println("RS=value (return speed)");
+=======
+>>>>>>> 50d4e9bedfa809f93c16cf1e3747c99fbb3a9d4a
 SerialBT.println("TR=value (trim rate)");
 SerialBT.println("TS=value (time sleep)");
 
@@ -57,9 +63,12 @@ SerialBT.println(BaseSpeed);
 SerialBT.print("TurboSpeed=");
 SerialBT.println(TurboSpeed);
 
+<<<<<<< HEAD
 SerialBT.print("ReturnSpeed=");
 SerialBT.println(ReturnSpeed);
 
+=======
+>>>>>>> 50d4e9bedfa809f93c16cf1e3747c99fbb3a9d4a
 SerialBT.print("trim=");
 SerialBT.println(trim);
 
@@ -114,9 +123,12 @@ trim=cmd.substring(3).toInt();
 else if(cmd.startsWith("TS=")){
 timeslep=cmd.substring(3).toInt();
 }
+<<<<<<< HEAD
 else if(cmd.startsWith("RS=")){
 ReturnSpeed=cmd.substring(3).toInt();
 }
+=======
+>>>>>>> 50d4e9bedfa809f93c16cf1e3747c99fbb3a9d4a
 
 else if(cmd=="CAL"){
 calibrateSensors();

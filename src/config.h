@@ -1,11 +1,26 @@
 #pragma once
 #include <Arduino.h>
+#include <EEPROM.h>
 
-/* ===== WIFI CONFIG ===== */
-#define WIFI_SSID "Keenetic"
-#define WIFI_PASS "VPN2011VPN"
+//config
+/*
+v1 stable
+P=10.00
+I=0.00
+D=10.00
+BaseSpeed=130
+TurboSpeed=130
+trim=0
+timeslep=150
+SensorThreshold=4000
+*/
 
-/* ===== SENSOR PINOUT ===== */
+
+/* ===== EEPROM ===== */
+#define EEPROM_SIZE 512
+
+/* ===== SENSOR PINS ===== */
+
 #define S0 36
 #define S1 39
 #define S2 34
@@ -16,8 +31,21 @@
 #define S7 26
 
 /* ===== MOTOR PINS ===== */
-#define motorL 12
-#define motorR 13
 
-/*=====BUTTON PINS=====*/
-#define butnStart 15
+#define motorL 13
+#define motorR 12
+
+/* ===== BUTTON ===== */
+
+#define BTN_START 15
+
+/* ===== PWM ===== */
+
+#define PWM_FREQ 20000
+#define PWM_RES 8
+#define PWM_CH_L 0
+#define PWM_CH_R 1
+
+/* ===== SENSOR COUNT ===== */
+
+#define SENSOR_COUNT 8

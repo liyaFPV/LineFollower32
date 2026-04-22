@@ -10,6 +10,7 @@ int ReturnSpeed = 200;
 int trim = 0;
 int timeslep = 10;
 int startTimeSleep=0;
+int dTime=0;
 bool robotRun = false;
 bool started=false;
 
@@ -18,29 +19,23 @@ static const uint32_t EEPROM_MAGIC = 0xA5A55A5A;
 
 void saveSettings() {
     int addr = 0;
+    
     EEPROM.put(addr, EEPROM_MAGIC); addr += sizeof(uint32_t);
-
     EEPROM.put(addr, P); addr += sizeof(float);
     EEPROM.put(addr, I); addr += sizeof(float);
     EEPROM.put(addr, D); addr += sizeof(float);
-
     EEPROM.put(addr, BaseSpeed); addr += sizeof(int);
     EEPROM.put(addr, TurboSpeed); addr += sizeof(int);
-
     EEPROM.put(addr, ReturnSpeed); addr += sizeof(int);
-
     EEPROM.put(addr, sensorThreshold); addr += sizeof(int);
-
     EEPROM.put(addr, trim); addr += sizeof(int);
     EEPROM.put(addr, timeslep); addr += sizeof(int);
-
-    // NEW
     EEPROM.put(addr, startTimeSleep); addr += sizeof(int);
+    EEPROM.put(addr, dTime); addr += sizeof(int);
 
     for(int i = 0; i < 8; i++) {
         EEPROM.put(addr, sensorMin[i]); addr += sizeof(int);
     }
-
     for(int i = 0; i < 8; i++) {
         EEPROM.put(addr, sensorMax[i]); addr += sizeof(int);
     }
@@ -53,47 +48,37 @@ void loadSettings() {
     uint32_t magic = 0;
 
     EEPROM.get(addr, magic);
+
     if(magic != EEPROM_MAGIC) {
         for(int i = 0; i < 8; i++) {
             sensorMin[i] = 0;
             sensorMax[i] = 4095;
         }
-
         sensorThreshold = 200;
         trim = 0;
         timeslep = 10;
-
         ReturnSpeed = 200;
-
-        // NEW
-        startTimeSleep = 0; // задай нужное значение по умолчанию
-
+        startTimeSleep = 0;
+        dTime = 0;
         return;
     }
 
     addr += sizeof(uint32_t);
-
     EEPROM.get(addr, P); addr += sizeof(float);
     EEPROM.get(addr, I); addr += sizeof(float);
     EEPROM.get(addr, D); addr += sizeof(float);
-
     EEPROM.get(addr, BaseSpeed); addr += sizeof(int);
     EEPROM.get(addr, TurboSpeed); addr += sizeof(int);
-
     EEPROM.get(addr, ReturnSpeed); addr += sizeof(int);
-
     EEPROM.get(addr, sensorThreshold); addr += sizeof(int);
-
     EEPROM.get(addr, trim); addr += sizeof(int);
     EEPROM.get(addr, timeslep); addr += sizeof(int);
-
-    // NEW
     EEPROM.get(addr, startTimeSleep); addr += sizeof(int);
+    EEPROM.get(addr, dTime); addr += sizeof(int);
 
     for(int i = 0; i < 8; i++) {
         EEPROM.get(addr, sensorMin[i]); addr += sizeof(int);
     }
-
     for(int i = 0; i < 8; i++) {
         EEPROM.get(addr, sensorMax[i]); addr += sizeof(int);
     }
@@ -147,6 +132,7 @@ void loop(){
     if(robotRun){
         if(!started){
             started=true;
+            delay(dTime);
             setMotor(BaseSpeed,BaseSpeed);
             delay(startTimeSleep);
         }

@@ -145,8 +145,8 @@ void loop(){
         delay(300);
     }
     if(robotRun){
-        started=true;
         if(!started){
+            started=true;
             setMotor(BaseSpeed,BaseSpeed);
             delay(startTimeSleep);
         }
@@ -155,5 +155,6 @@ void loop(){
     }
     else{
         setMotor(0,0);
+        started = false;
     }
 }

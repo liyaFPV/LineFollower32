@@ -13,6 +13,8 @@ TurboSpeed=130
 ReturnSpeed=200
 trim=0
 timeslep=150
+startTimeSleep=0
+delayTime=0
 SensorThreshold=4000
 */
 

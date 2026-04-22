@@ -19,7 +19,7 @@ static const uint32_t EEPROM_MAGIC = 0xA5A55A5A;
 
 void saveSettings() {
     int addr = 0;
-    
+
     EEPROM.put(addr, EEPROM_MAGIC); addr += sizeof(uint32_t);
     EEPROM.put(addr, P); addr += sizeof(float);
     EEPROM.put(addr, I); addr += sizeof(float);
@@ -131,6 +131,7 @@ void loop(){
     }
     if(robotRun){
         if(!started){
+            setMotor(0,0);
             started=true;
             delay(dTime);
             setMotor(BaseSpeed,BaseSpeed);

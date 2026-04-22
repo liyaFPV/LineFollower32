@@ -9,7 +9,9 @@ int TurboSpeed = 140;
 int ReturnSpeed = 200;
 int trim = 0;
 int timeslep = 10;
+int startTimeSleep=0;
 bool robotRun = false;
+bool started=false;
 
 int lastErr = 0;
 static const uint32_t EEPROM_MAGIC = 0xA5A55A5A;
@@ -25,13 +27,15 @@ void saveSettings() {
     EEPROM.put(addr, BaseSpeed); addr += sizeof(int);
     EEPROM.put(addr, TurboSpeed); addr += sizeof(int);
 
-    // NEW
     EEPROM.put(addr, ReturnSpeed); addr += sizeof(int);
 
     EEPROM.put(addr, sensorThreshold); addr += sizeof(int);
 
     EEPROM.put(addr, trim); addr += sizeof(int);
     EEPROM.put(addr, timeslep); addr += sizeof(int);
+
+    // NEW
+    EEPROM.put(addr, startTimeSleep); addr += sizeof(int);
 
     for(int i = 0; i < 8; i++) {
         EEPROM.put(addr, sensorMin[i]); addr += sizeof(int);
@@ -61,6 +65,9 @@ void loadSettings() {
 
         ReturnSpeed = 200;
 
+        // NEW
+        startTimeSleep = 0; // задай нужное значение по умолчанию
+
         return;
     }
 
@@ -73,13 +80,15 @@ void loadSettings() {
     EEPROM.get(addr, BaseSpeed); addr += sizeof(int);
     EEPROM.get(addr, TurboSpeed); addr += sizeof(int);
 
-    // NEW
     EEPROM.get(addr, ReturnSpeed); addr += sizeof(int);
 
     EEPROM.get(addr, sensorThreshold); addr += sizeof(int);
 
     EEPROM.get(addr, trim); addr += sizeof(int);
     EEPROM.get(addr, timeslep); addr += sizeof(int);
+
+    // NEW
+    EEPROM.get(addr, startTimeSleep); addr += sizeof(int);
 
     for(int i = 0; i < 8; i++) {
         EEPROM.get(addr, sensorMin[i]); addr += sizeof(int);
@@ -136,6 +145,11 @@ void loop(){
         delay(300);
     }
     if(robotRun){
+        started=true;
+        if(!started){
+            setMotor(BaseSpeed,BaseSpeed);
+            delay(startTimeSleep);
+        }
         int err = readLine();
         processLine(err);
     }

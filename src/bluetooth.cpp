@@ -10,6 +10,7 @@ extern int ReturnSpeed;
 extern int trim;
 extern int timeslep;
 extern bool robotRun;
+extern int startTimeSleep;
 
 
 BluetoothSerial SerialBT;
@@ -34,6 +35,7 @@ SerialBT.println("T=value (turbo speed)");
 SerialBT.println("RS=value (return speed)");
 SerialBT.println("TR=value (trim rate)");
 SerialBT.println("TS=value (time sleep)");
+SerialBT.println("SS=value (start time sleep)");
 
 SerialBT.println("CAL");
 SerialBT.println("SENS -> start manual sensitivity measurement (200 ms average output)");
@@ -65,6 +67,9 @@ SerialBT.println(trim);
 
 SerialBT.print("timeslep=");
 SerialBT.println(timeslep);
+
+SerialBT.print("startTimeSleep=");
+SerialBT.println(startTimeSleep);
 
 SerialBT.print("RUN=");
 SerialBT.println(robotRun);
@@ -117,7 +122,9 @@ timeslep=cmd.substring(3).toInt();
 else if(cmd.startsWith("RS=")){
 ReturnSpeed=cmd.substring(3).toInt();
 }
-
+else if(cmd.startsWith("SS=")){
+startTimeSleep=cmd.substring(3).toInt();
+}
 else if(cmd=="CAL"){
 calibrateSensors();
 }
